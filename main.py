@@ -29,6 +29,7 @@ def download_image(counter, img_url):
     link = urljoin(base, img_url)
     response = requests.get(link)
     response.raise_for_status()
+    check_for_redirect(response)
     os.makedirs('images', exist_ok=True)
     filename = urlsplit(unquote(link)).path.split('/')[-1]
     with open(f'images/{filename}', 'wb') as file:
@@ -54,6 +55,19 @@ def print_book_image_link(url):
     soup = BeautifulSoup(html_page_content, 'lxml')
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
+def download_comments(url):
+    response = requests.get(url)
+    response.raise_for_status()
+    check_for_redirect(response)
+    html_page_content = response.text
+    soup = BeautifulSoup(html_page_content, 'lxml')
+    comments = [
+        x.find(class_='black').text
+        for x in soup.find_all(class_='texts')
+    ]
+    for comment in comments:
+        print(comment)
+    print()
 
 
 def main():
@@ -61,8 +75,10 @@ def main():
         try:
             page_url = f'https://tululu.org/b{counter}/'
             title, author = get_title_author(page_url)
+            print(title, sep='\n')
             img_url = print_book_image_link(page_url)
             download_image(counter, img_url)
+            download_comments(page_url)
             # book_url = f'http://tululu.org/txt.php?id={counter}'
             # download_txt(book_url, title)
         except Exception as e:
