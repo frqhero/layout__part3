@@ -34,20 +34,29 @@ def download_image(img_url):
 
 def parse_comments(soup):
     comments = [
-        x.find(class_='black').text
-        for x in soup.find_all(class_='texts')
+        x.find(class_='black').text for x in soup.find_all(class_='texts')
     ]
-    [print(comment) for comment in comments]
-    print()
+    return comments
 
 
 def parse_genres(soup):
-    genres = [
-        x.text
-        for x in soup.find('span', class_='d_book').find_all('a')
-    ]
-    print(genres)
-    print()
+    genres = [x.text for x in soup.find('span', class_='d_book').find_all('a')]
+    return genres
+
+
+def parse_book_page(response_text):
+    soup = BeautifulSoup(response_text, 'lxml')
+    title, author = parse_title_author(soup)
+    img_path = parse_book_image_link(soup)
+    comments = parse_comments(soup)
+    genres = parse_genres(soup)
+    return {
+        'title': title,
+        'author': author,
+        'img_path': img_path,
+        'comments': comments,
+        'genres': genres,
+    }
 
 
 def download_txt(url, filename, folder='books/'):
@@ -71,12 +80,8 @@ def main():
             response.raise_for_status()
             check_for_redirect(response.url, base)
 
-            soup = BeautifulSoup(response.text, 'lxml')
-            title, author = parse_title_author(soup)
-            print(title)
-            # img_path = parse_book_image_link(soup)
-            # parse_comments(soup)
-            parse_genres(soup)
+            parsed_book_page = parse_book_page(response.text)
+            1
 
             # img_url = urljoin(base, img_path)
             # download_image(img_url)
