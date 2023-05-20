@@ -1,5 +1,6 @@
 from os.path import join
 from urllib.parse import urljoin, urlsplit, unquote
+import argparse
 import os
 
 from bs4 import BeautifulSoup
@@ -22,10 +23,11 @@ def parse_book_image_link(soup):
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
 
-def download_image(img_url):
+def download_image(base, img_path):
+    img_url = urljoin(base, img_path)
     response = requests.get(img_url)
     response.raise_for_status()
-    check_for_redirect(response)
+    check_for_redirect(response, base)
     os.makedirs('images', exist_ok=True)
     filename = urlsplit(unquote(img_url)).path.split('/')[-1]
     with open(f'images/{filename}', 'wb') as file:
@@ -59,12 +61,12 @@ def parse_book_page(response_text):
     }
 
 
-def download_txt(url, filename, folder='books/'):
+def download_txt(base, url, filename, folder='books/'):
     folder = sanitize_filepath(folder)
     os.makedirs(folder, exist_ok=True)
     response = requests.get(url)
     response.raise_for_status()
-    check_for_redirect(response)
+    check_for_redirect(response.url, base)
     filename = sanitize_filename(filename)
     file_path = join(folder, f'{filename}.txt')
     with open(file_path, 'wb') as file:
@@ -72,7 +74,11 @@ def download_txt(url, filename, folder='books/'):
 
 
 def main():
-    for counter in range(1, 11):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--start_id', default=1, type=int)
+    parser.add_argument('--end_id', default=10, type=int)
+    args = parser.parse_args()
+    for counter in range(args.start_id, args.end_id + 1):
         try:
             base = 'https://tululu.org/'
             book_url = urljoin(base, f'b{counter}')
@@ -81,13 +87,11 @@ def main():
             check_for_redirect(response.url, base)
 
             parsed_book_page = parse_book_page(response.text)
-            1
 
-            # img_url = urljoin(base, img_path)
-            # download_image(img_url)
+            download_image(base, parsed_book_page['img_path'])
 
-            # book_url = urljoin(base, f'txt.php?id={counter}')
-            # download_txt(book_url, title)
+            book_url = urljoin(base, f'txt.php?id={counter}')
+            download_txt(base, book_url, parsed_book_page['title'])
         except Exception as e:
             print(e)
 
