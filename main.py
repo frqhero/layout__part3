@@ -1,5 +1,5 @@
 from os.path import join
-from urllib.parse import urljoin, urlparse, urlsplit, unquote
+from urllib.parse import urljoin, urlsplit, unquote
 import os
 
 from bs4 import BeautifulSoup
@@ -7,23 +7,18 @@ from pathvalidate import sanitize_filepath, sanitize_filename
 import requests
 
 
-def check_for_redirect(response):
-    index_page = 'https://tululu.org/'
-    if response.url == index_page:
+def check_for_redirect(response_url, base):
+    if response_url == base:
         raise requests.exceptions.HTTPError('Книга не найдена')
 
 
-def get_title_author(response):
-    html_page_content = response.text
-    soup = BeautifulSoup(html_page_content, 'lxml')
+def parse_title_author(soup):
     post_title = soup.find('h1').text
     title, author = [word.strip() for word in post_title.split('::')]
     return title, author
 
 
-def get_book_image_link(response):
-    html_page_content = response.text
-    soup = BeautifulSoup(html_page_content, 'lxml')
+def parse_book_image_link(soup):
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
 
@@ -37,15 +32,21 @@ def download_image(img_url):
         file.write(response.content)
 
 
-def download_comments(response):
-    html_page_content = response.text
-    soup = BeautifulSoup(html_page_content, 'lxml')
+def parse_comments(soup):
     comments = [
         x.find(class_='black').text
         for x in soup.find_all(class_='texts')
     ]
-    for comment in comments:
-        print(comment)
+    [print(comment) for comment in comments]
+    print()
+
+
+def parse_genres(soup):
+    genres = [
+        x.text
+        for x in soup.find('span', class_='d_book').find_all('a')
+    ]
+    print(genres)
     print()
 
 
@@ -64,17 +65,22 @@ def download_txt(url, filename, folder='books/'):
 def main():
     for counter in range(1, 11):
         try:
-            base = 'https://tululu.org'
+            base = 'https://tululu.org/'
             book_url = urljoin(base, f'b{counter}')
             response = requests.get(book_url)
             response.raise_for_status()
-            check_for_redirect(response)
-            title, author = get_title_author(response)
-            print(title, sep='\n')
-            # img_path = get_book_image_link(response)
+            check_for_redirect(response.url, base)
+
+            soup = BeautifulSoup(response.text, 'lxml')
+            title, author = parse_title_author(soup)
+            print(title)
+            # img_path = parse_book_image_link(soup)
+            # parse_comments(soup)
+            parse_genres(soup)
+
             # img_url = urljoin(base, img_path)
             # download_image(img_url)
-            download_comments(response)
+
             # book_url = urljoin(base, f'txt.php?id={counter}')
             # download_txt(book_url, title)
         except Exception as e:
