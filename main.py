@@ -101,7 +101,7 @@ def main():
 
             parsed_book_page = parse_book_page(response.text)
 
-            download_image(netloc, parsed_book_page['img_address'])
+            download_image(book_url, parsed_book_page['img_address'])
 
             book_url = urljoin(netloc, f'txt.php?id={counter}')
             download_txt(netloc, book_url, parsed_book_page['title'])
