@@ -23,8 +23,8 @@ def parse_book_image_link(soup):
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
 
-def download_image(netloc, img_path):
-    img_url = urljoin(netloc, img_path)
+def download_image(netloc, img_address):
+    img_url = urljoin(netloc, img_address)
     response = requests.get(img_url)
     response.raise_for_status()
     check_for_redirect(response, netloc)
@@ -49,13 +49,13 @@ def parse_genres(soup):
 def parse_book_page(response_text):
     soup = BeautifulSoup(response_text, 'lxml')
     title, author = parse_title_author(soup)
-    img_path = parse_book_image_link(soup)
+    img_address = parse_book_image_link(soup)
     comments = parse_comments(soup)
     genres = parse_genres(soup)
     return {
         'title': title,
         'author': author,
-        'img_path': img_path,
+        'img_address': img_address,
         'comments': comments,
         'genres': genres,
     }
@@ -101,7 +101,7 @@ def main():
 
             parsed_book_page = parse_book_page(response.text)
 
-            download_image(netloc, parsed_book_page['img_path'])
+            download_image(netloc, parsed_book_page['img_address'])
 
             book_url = urljoin(netloc, f'txt.php?id={counter}')
             download_txt(netloc, book_url, parsed_book_page['title'])
