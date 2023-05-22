@@ -8,8 +8,8 @@ from pathvalidate import sanitize_filepath, sanitize_filename
 import requests
 
 
-def check_for_redirect(response_url, netloc):
-    if response_url == netloc:
+def check_for_redirect(response_url):
+    if response_url == urljoin(response_url, '/'):
         raise requests.exceptions.HTTPError('Книга не найдена')
 
 
@@ -23,11 +23,11 @@ def parse_book_image_link(soup):
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
 
-def download_image(netloc, img_address):
-    img_url = urljoin(netloc, img_address)
+def download_image(book_url, img_address):
+    img_url = urljoin(book_url, img_address)
     response = requests.get(img_url)
     response.raise_for_status()
-    check_for_redirect(response, netloc)
+    check_for_redirect(response.url)
     os.makedirs('images', exist_ok=True)
     filename = urlsplit(unquote(img_url)).path.split('/')[-1]
     with open(f'images/{filename}', 'wb') as file:
@@ -61,12 +61,15 @@ def parse_book_page(response_text):
     }
 
 
-def download_txt(netloc, url, filename, folder='books/'):
+def download_txt(book_url, counter, filename, folder='books/'):
+    book_file_url = urljoin(book_url, 'txt.php')
+    params = {'id': counter}
+    response = requests.get(book_file_url, params=params)
+    response.raise_for_status()
+    check_for_redirect(response.url)
+
     folder = sanitize_filepath(folder)
     os.makedirs(folder, exist_ok=True)
-    response = requests.get(url)
-    response.raise_for_status()
-    check_for_redirect(response.url, netloc)
     filename = sanitize_filename(filename)
     file_path = join(folder, f'{filename}.txt')
     with open(file_path, 'wb') as file:
@@ -91,20 +94,19 @@ def main():
         help='Set second ID the script will work with',
     )
     args = parser.parse_args()
+    netloc = 'https://tululu.org/'
     for counter in range(args.start_id, args.end_id + 1):
         try:
-            netloc = 'https://tululu.org/'
             book_url = urljoin(netloc, f'b{counter}')
             response = requests.get(book_url)
             response.raise_for_status()
-            check_for_redirect(response.url, netloc)
+            check_for_redirect(response.url)
 
             parsed_book_page = parse_book_page(response.text)
 
             download_image(book_url, parsed_book_page['img_address'])
 
-            book_url = urljoin(netloc, f'txt.php?id={counter}')
-            download_txt(netloc, book_url, parsed_book_page['title'])
+            download_txt(book_url, counter, parsed_book_page['title'])
         except Exception as e:
             print(e)
 
