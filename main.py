@@ -74,9 +74,22 @@ def download_txt(base, url, filename, folder='books/'):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--start_id', default=1, type=int)
-    parser.add_argument('--end_id', default=10, type=int)
+    parser = argparse.ArgumentParser(
+        description='This script is used for '
+        'downloading books and related materials'
+    )
+    parser.add_argument(
+        '--start_id',
+        default=1,
+        type=int,
+        help='Set first ID the script will work with',
+    )
+    parser.add_argument(
+        '--end_id',
+        default=10,
+        type=int,
+        help='Set second ID the script will work with',
+    )
     args = parser.parse_args()
     for counter in range(args.start_id, args.end_id + 1):
         try:
