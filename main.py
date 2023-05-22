@@ -2,6 +2,7 @@ from os.path import join
 from urllib.parse import urljoin, urlsplit, unquote
 import argparse
 import os
+import time
 
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filepath, sanitize_filename
@@ -94,10 +95,10 @@ def main():
         help='Set second ID the script will work with',
     )
     args = parser.parse_args()
-    netloc = 'https://tululu.org/'
+    netloc = 'https://tululu.org/gg'
     for counter in range(args.start_id, args.end_id + 1):
         try:
-            book_url = urljoin(netloc, f'b{counter}')
+            book_url = urljoin(netloc, f'bh{counter}')
             response = requests.get(book_url)
             response.raise_for_status()
             check_for_redirect(response.url)
@@ -109,6 +110,9 @@ def main():
             download_txt(book_url, counter, parsed_book_page['title'])
         except requests.exceptions.HTTPError as e:
             print(e)
+        except requests.exceptions.ConnectionError as e:
+            print(e)
+            time.sleep(10)
 
 
 if __name__ == '__main__':
