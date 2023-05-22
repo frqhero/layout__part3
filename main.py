@@ -107,7 +107,7 @@ def main():
             download_image(book_url, parsed_book_page['img_address'])
 
             download_txt(book_url, counter, parsed_book_page['title'])
-        except Exception as e:
+        except requests.exceptions.HTTPError as e:
             print(e)
 
 
