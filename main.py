@@ -8,8 +8,8 @@ from pathvalidate import sanitize_filepath, sanitize_filename
 import requests
 
 
-def check_for_redirect(response_url, base):
-    if response_url == base:
+def check_for_redirect(response_url, netloc):
+    if response_url == netloc:
         raise requests.exceptions.HTTPError('Книга не найдена')
 
 
@@ -23,11 +23,11 @@ def parse_book_image_link(soup):
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
 
-def download_image(base, img_path):
-    img_url = urljoin(base, img_path)
+def download_image(netloc, img_path):
+    img_url = urljoin(netloc, img_path)
     response = requests.get(img_url)
     response.raise_for_status()
-    check_for_redirect(response, base)
+    check_for_redirect(response, netloc)
     os.makedirs('images', exist_ok=True)
     filename = urlsplit(unquote(img_url)).path.split('/')[-1]
     with open(f'images/{filename}', 'wb') as file:
@@ -61,12 +61,12 @@ def parse_book_page(response_text):
     }
 
 
-def download_txt(base, url, filename, folder='books/'):
+def download_txt(netloc, url, filename, folder='books/'):
     folder = sanitize_filepath(folder)
     os.makedirs(folder, exist_ok=True)
     response = requests.get(url)
     response.raise_for_status()
-    check_for_redirect(response.url, base)
+    check_for_redirect(response.url, netloc)
     filename = sanitize_filename(filename)
     file_path = join(folder, f'{filename}.txt')
     with open(file_path, 'wb') as file:
@@ -93,18 +93,18 @@ def main():
     args = parser.parse_args()
     for counter in range(args.start_id, args.end_id + 1):
         try:
-            base = 'https://tululu.org/'
-            book_url = urljoin(base, f'b{counter}')
+            netloc = 'https://tululu.org/'
+            book_url = urljoin(netloc, f'b{counter}')
             response = requests.get(book_url)
             response.raise_for_status()
-            check_for_redirect(response.url, base)
+            check_for_redirect(response.url, netloc)
 
             parsed_book_page = parse_book_page(response.text)
 
-            download_image(base, parsed_book_page['img_path'])
+            download_image(netloc, parsed_book_page['img_path'])
 
-            book_url = urljoin(base, f'txt.php?id={counter}')
-            download_txt(base, book_url, parsed_book_page['title'])
+            book_url = urljoin(netloc, f'txt.php?id={counter}')
+            download_txt(netloc, book_url, parsed_book_page['title'])
         except Exception as e:
             print(e)
 
