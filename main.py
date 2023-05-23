@@ -95,10 +95,10 @@ def main():
         help='Set second ID the script will work with',
     )
     args = parser.parse_args()
-    netloc = 'https://tululu.org/gg'
+    netloc = 'https://tululu.org/'
     for counter in range(args.start_id, args.end_id + 1):
         try:
-            book_url = urljoin(netloc, f'bh{counter}')
+            book_url = urljoin(netloc, f'b{counter}')
             response = requests.get(book_url)
             response.raise_for_status()
             check_for_redirect(response.url)
