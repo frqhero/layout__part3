@@ -11,8 +11,11 @@ def main():
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
     content = soup.find('div', {'id': 'content'})
-    href = content.find('a')['href']
-    print(urljoin(netloc, href))
+    links = [
+        urljoin(netloc, x.find('a')['href'])
+        for x in content.find_all('table')
+    ]
+    print("\n".join(links))
 
 
 if __name__ == '__main__':
