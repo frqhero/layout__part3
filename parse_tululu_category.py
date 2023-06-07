@@ -1,4 +1,5 @@
 from urllib.parse import urljoin, urlsplit
+import argparse
 import json
 
 from bs4 import BeautifulSoup
@@ -27,9 +28,26 @@ def parse_books_by_page_link(netloc, link):
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description='This script is used for '
+                    'downloading books and related materials'
+    )
+    parser.add_argument(
+        '--start_id',
+        default=1,
+        type=int,
+        help='Set first ID the script will work with',
+    )
+    parser.add_argument(
+        '--end_id',
+        default=701,
+        type=int,
+        help='Set second ID the script will work with',
+    )
+    args = parser.parse_args()
     netloc = 'https://tululu.org/'
     links = []
-    for counter in range(1, 5):
+    for counter in range(args.start_id, args.end_id + 1):
         sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
         links += parse_books_by_page_link(netloc, sci_fi_page_address)
 
