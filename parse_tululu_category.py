@@ -16,10 +16,12 @@ def parse_books_by_page_link(netloc, link):
     response = requests.get(link)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
-    content = soup.find('div', {'id': 'content'})
+    table_selector = 'div#content table'
+    tables = soup.select(table_selector)
+    anchor_selector = 'a'
     links = [
-        urljoin(netloc, table.find('a')['href']).rstrip('/')
-        for table in content.find_all('table')
+        urljoin(netloc, table.select_one(anchor_selector)['href'].rstrip('/'))
+        for table in tables
     ]
     return links
 
@@ -31,7 +33,6 @@ def main():
         sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
         links += parse_books_by_page_link(netloc, sci_fi_page_address)
 
-    # print("\n".join(links))
     books_description = []
     for book_url in links:
         try:
