@@ -24,14 +24,14 @@ def parse_book_image_link(soup):
     return soup.find(class_='bookimage').find('a').find('img').attrs['src']
 
 
-def download_image(book_url, img_address):
+def download_image(book_url, img_address, path='images'):
     img_url = urljoin(book_url, img_address)
     response = requests.get(img_url)
     response.raise_for_status()
     check_for_redirect(response.url)
-    os.makedirs('images', exist_ok=True)
+    os.makedirs(path, exist_ok=True)
     filename = urlsplit(unquote(img_url)).path.split('/')[-1]
-    with open(f'images/{filename}', 'wb') as file:
+    with open(f'{path}/{filename}', 'wb') as file:
         file.write(response.content)
 
 
@@ -69,7 +69,7 @@ def download_txt(book_url, counter, filename, folder='books/'):
     response.raise_for_status()
     check_for_redirect(response.url)
 
-    folder = sanitize_filepath(folder)
+    folder = sanitize_filepath(folder, platform='auto')
     os.makedirs(folder, exist_ok=True)
     filename = sanitize_filename(filename)
     file_path = join(folder, f'{filename}.txt')
