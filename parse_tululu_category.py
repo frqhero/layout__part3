@@ -44,16 +44,16 @@ def create_parser():
         'downloading books and related materials'
     )
     parser.add_argument(
-        '--start_id',
+        '--start_page',
         default=1,
         type=int,
-        help='Set first ID the script will work with',
+        help='Set first page the script will work with',
     )
     parser.add_argument(
-        '--end_id',
+        '--end_page',
         default=701,
         type=int,
-        help='Set second ID the script will work with',
+        help='Set end page the script will work with',
     )
     base_dir = os.path.dirname(os.path.abspath(__file__))
     parser.add_argument(
