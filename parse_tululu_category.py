@@ -3,6 +3,7 @@ from urllib.parse import urljoin, urlsplit
 import argparse
 import json
 import os
+import time
 
 from bs4 import BeautifulSoup
 import requests
@@ -87,13 +88,13 @@ def main():
     args = parser.parse_args()
     netloc = 'https://tululu.org/'
     links = []
-    for counter in range(args.start_id, args.end_id + 1):
-        sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
-        links += parse_books_by_page_link(netloc, sci_fi_page_address)
+    try:
+        for counter in range(args.start_id, args.end_id + 1):
+            sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
+            links += parse_books_by_page_link(netloc, sci_fi_page_address)
 
-    books_description = []
-    for book_url in links:
-        try:
+        books_description = []
+        for book_url in links:
             response = requests.get(book_url)
             response.raise_for_status()
             check_for_redirect(response.url)
@@ -117,8 +118,12 @@ def main():
                     str(images_folder),
                 )
             books_description.append(parsed_book_page)
-        except requests.exceptions.HTTPError as e:
-            print(e)
+    except requests.exceptions.HTTPError as e:
+        print(e)
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        time.sleep(10)
+
     json_path = (
         args.json_path
         if args.dest_folder != args.json_path
