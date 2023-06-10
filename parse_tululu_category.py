@@ -18,6 +18,7 @@ from main import (
 def parse_books_by_page_link(netloc, link):
     response = requests.get(link)
     response.raise_for_status()
+    check_for_redirect(response.url)
     soup = BeautifulSoup(response.text, 'lxml')
     table_selector = 'div#content table'
     tables = soup.select(table_selector)
