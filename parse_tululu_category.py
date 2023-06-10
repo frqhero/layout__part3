@@ -93,7 +93,7 @@ def main():
             sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
             links += parse_books_by_page_link(netloc, sci_fi_page_address)
 
-        books_description = []
+        book_descriptions = []
         for book_url in links:
             response = requests.get(book_url)
             response.raise_for_status()
@@ -117,7 +117,7 @@ def main():
                     parsed_book_page['img_address'],
                     str(images_folder),
                 )
-            books_description.append(parsed_book_page)
+            book_descriptions.append(parsed_book_page)
     except requests.exceptions.HTTPError as e:
         print(e)
     except requests.exceptions.ConnectionError as e:
@@ -131,7 +131,7 @@ def main():
     )
     json_path = Path(json_path).joinpath('books_description.json')
     with open(str(json_path), 'w', encoding='utf8') as json_file:
-        json.dump(books_description, json_file, ensure_ascii=False)
+        json.dump(book_descriptions, json_file, ensure_ascii=False)
 
 
 if __name__ == '__main__':
