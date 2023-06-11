@@ -88,13 +88,21 @@ def main():
     args = parser.parse_args()
     netloc = 'https://tululu.org/'
     links = []
-    try:
-        for counter in range(args.start_id, args.end_id + 1):
+
+    for counter in range(args.start_id, args.end_id + 1):
+        try:
             sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
             links += parse_books_by_page_link(netloc, sci_fi_page_address)
+        except requests.exceptions.HTTPError as e:
+            print(e)
+        except requests.exceptions.ConnectionError as e:
+            print(e)
+            time.sleep(10)
 
-        book_descriptions = []
-        for book_url in links:
+    book_descriptions = []
+
+    for book_url in links:
+        try:
             response = requests.get(book_url)
             response.raise_for_status()
             check_for_redirect(response.url)
@@ -118,11 +126,11 @@ def main():
                     str(images_folder),
                 )
             book_descriptions.append(parsed_book_page)
-    except requests.exceptions.HTTPError as e:
-        print(e)
-    except requests.exceptions.ConnectionError as e:
-        print(e)
-        time.sleep(10)
+        except requests.exceptions.HTTPError as e:
+            print(e)
+        except requests.exceptions.ConnectionError as e:
+            print(e)
+            time.sleep(10)
 
     json_path = (
         args.json_path
