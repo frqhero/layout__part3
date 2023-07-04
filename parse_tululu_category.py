@@ -89,7 +89,7 @@ def main():
     netloc = 'https://tululu.org/'
     links = []
 
-    for counter in range(args.start_id, args.end_id + 1):
+    for counter in range(args.start_page, args.end_page + 1):
         try:
             sci_fi_page_address = urljoin(netloc, f'l55/{counter}')
             links += parse_books_by_page_link(netloc, sci_fi_page_address)
@@ -118,7 +118,7 @@ def main():
                     parsed_book_page['title'],
                     str(books_folder),
                 )
-            images_folder = Path(args.dest_folder).joinpath('images')
+            images_folder = Path(args.dest_folder).joinpath('shots')
             if not args.skip_imgs:
                 download_image(
                     book_url,
