@@ -1,10 +1,10 @@
-from http.server import HTTPServer, SimpleHTTPRequestHandler
 import json
 
+from livereload import Server
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def main():
+def prepare_html():
     env = Environment(
         loader=FileSystemLoader('.'),
         autoescape=select_autoescape(['html', 'xml'])
@@ -19,8 +19,13 @@ def main():
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
 
-    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-    server.serve_forever()
+
+def main():
+    prepare_html()
+
+    server = Server()
+    server.watch('template.html', prepare_html)
+    server.serve(root='.')
 
 
 if __name__ == '__main__':
