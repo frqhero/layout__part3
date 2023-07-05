@@ -161,4 +161,6 @@ cython_debug/
 books
 images
 shots
+pages
 .DS_Store
+books_description.json
