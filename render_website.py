@@ -15,7 +15,11 @@ def prepare_html():
     with open('books_description.json', 'r') as file:
         books_description = json.load(file)
 
+    for book in books_description:
+        book['address'] = f'books/{book["title"]}.txt'
+
     books_description = list(chunked(books_description, 2))
+
 
     rendered_page = template.render(books_description=books_description)
 
