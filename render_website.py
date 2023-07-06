@@ -24,7 +24,9 @@ def prepare_page(books_description, counter, page_count):
     rendered_page = template.render(
         books_description=books_description_by_2,
         page_count=page_count,
-        page_number=counter
+        page_number=counter,
+        first_page=bool(counter == 1),
+        last_page=bool(counter == page_count)
     )
 
     with open(f'{folder}/index{counter}.html', 'w', encoding="utf8") as file:
