@@ -19,15 +19,15 @@
         <nav aria-label="Page navigation example">
           <ul class="pagination">
             <li class="page-item {% if first_page %}disabled{% endif %}">
-              <a class="page-link" href="/pages/index{{ page_number - 1 }}.html">Назад</a>
+              <a class="page-link" href="../pages/index{{ page_number - 1 }}.html">Назад</a>
             </li>
             {% for n in range(1, page_count + 1) %}
               <li class="page-item {% if page_number == n %}active{% endif %}">
-                <a class="page-link" href="/pages/index{{ n }}.html">{{ n }}</a>
+                <a class="page-link" href="../pages/index{{ n }}.html">{{ n }}</a>
               </li>
             {% endfor %}
             <li class="page-item {% if last_page %}disabled{% endif %}">
-              <a class="page-link" href="/pages/index{{ page_number + 1 }}.html">Вперед</a>
+              <a class="page-link" href="../pages/index{{ page_number + 1 }}.html">Вперед</a>
             </li>
           </ul>
         </nav>
@@ -40,7 +40,7 @@
                 <div class="card mb-3" style="max-width: 540px;">
                   <div class="row no-gutters">
                     <div class="col-md-4">
-                      <img src="{{ book['img_address'] }}" class="card-img" alt="Обложка книги {{ book['title'] }}">
+                      <img src="..{{ book['img_address'] }}" class="card-img" alt="Обложка книги {{ book['title'] }}">
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">
