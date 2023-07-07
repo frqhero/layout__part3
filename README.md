@@ -46,3 +46,8 @@ Please consider using parameters to customize the script's behavior.
 * `--skip_imgs` - if specified, the script will skip the image downloading process.  
 * `--skip_txt` - if specified, the script will skip the txt files downloading process.  
 * `--json_path /Users/username/dev` - allows you to independently set the file path for the JSON description output..
+
+### Rendering a website
+There is a script named render_website.py in the repository. You can create a website out of downloaded sources from previous step with it.  
+An example's deployed for you.  
+The complete product you are welcome to observe is at https://frqhero.github.io/layout__part3
