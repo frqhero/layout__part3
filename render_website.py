@@ -1,3 +1,4 @@
+import argparse
 import json
 import math
 import os
@@ -36,8 +37,8 @@ def prepare_page(book_descriptions, counter, page_count):
         file.write(rendered_page)
 
 
-def prepare_html():
-    with open('books_description.json', 'r') as file:
+def prepare_html(description_path):
+    with open(description_path, 'r') as file:
         books_description_content = json.load(file)
 
     books_on_page = 10
@@ -48,8 +49,33 @@ def prepare_html():
         prepare_page(book_descriptions, counter, page_count)
 
 
+def is_file(filename):
+    if os.path.isfile(filename):
+        return filename
+    else:
+        raise argparse.ArgumentTypeError(
+            f'{filename} is not a valid filename'
+        )
+
+
+def create_parser():
+    parser = argparse.ArgumentParser(
+        description='This script is used for '
+        'create and serve web pages with parsed books'
+    )
+    parser.add_argument(
+        '--description_path',
+        default='books_description.json',
+        type=is_file,
+        help='Set books_description file',
+    )
+    return parser
+
+
 def main():
-    prepare_html()
+    parser = create_parser()
+    args = parser.parse_args()
+    prepare_html(args.description_path)
 
     server = Server()
     server.watch('template.html', prepare_html)
