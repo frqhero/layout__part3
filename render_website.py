@@ -21,10 +21,10 @@ def prepare_page(book_descriptions, counter, page_count):
         pic_name = os.path.basename(book['img_address'])
         book['img_address'] = f'../media/images/{pic_name}'
 
-    books_description_by_2 = list(chunked(book_descriptions, 2))
+    books_description_row_chunked = list(chunked(book_descriptions, 2))
 
     rendered_page = template.render(
-        books_description=books_description_by_2,
+        books_description=books_description_row_chunked,
         page_count=page_count,
         page_number=counter,
         first_page=bool(counter == 1),
@@ -41,8 +41,8 @@ def prepare_html():
 
     page_count = math.ceil(len(books_description_content) / 10)
 
-    books_description_by_10 = list(chunked(books_description_content, 10))
-    for counter, book_descriptions in enumerate(books_description_by_10, 1):
+    books_description_page_chunked = list(chunked(books_description_content, 10))
+    for counter, book_descriptions in enumerate(books_description_page_chunked, 1):
         prepare_page(book_descriptions, counter, page_count)
 
 
