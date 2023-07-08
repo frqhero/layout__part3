@@ -18,7 +18,7 @@ def prepare_page(book_descriptions, counter, page_count):
     template = env.get_template('template.html')
 
     for book in book_descriptions:
-        book['address'] = f'../books/{book["title"]}.txt'
+        book['address'] = f'../media/books/{book["title"]}.txt'
         pic_name = os.path.basename(book['img_address'])
         book['img_address'] = f'../media/images/{pic_name}'
 
