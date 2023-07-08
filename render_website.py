@@ -21,7 +21,8 @@ def prepare_page(book_descriptions, counter, page_count):
         pic_name = os.path.basename(book['img_address'])
         book['img_address'] = f'../media/images/{pic_name}'
 
-    books_description_row_chunked = list(chunked(book_descriptions, 2))
+    books_in_row = 2
+    books_description_row_chunked = list(chunked(book_descriptions, books_in_row))
 
     rendered_page = template.render(
         books_description=books_description_row_chunked,
@@ -39,9 +40,10 @@ def prepare_html():
     with open('books_description.json', 'r') as file:
         books_description_content = json.load(file)
 
-    page_count = math.ceil(len(books_description_content) / 10)
+    books_on_page = 10
+    page_count = math.ceil(len(books_description_content) / books_on_page)
 
-    books_description_page_chunked = list(chunked(books_description_content, 10))
+    books_description_page_chunked = list(chunked(books_description_content, books_on_page))
     for counter, book_descriptions in enumerate(books_description_page_chunked, 1):
         prepare_page(book_descriptions, counter, page_count)
 
