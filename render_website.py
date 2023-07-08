@@ -39,8 +39,10 @@ def prepare_page(book_descriptions, counter, page_count):
         file.write(rendered_page)
 
 
-def prepare_html(description_path):
-    with open(description_path, 'r') as file:
+def prepare_html():
+    parser = create_parser()
+    args = parser.parse_args()
+    with open(args.description_path, 'r') as file:
         books_description_content = json.load(file)
 
     books_on_page = 10
@@ -77,9 +79,7 @@ def create_parser():
 
 
 def main():
-    parser = create_parser()
-    args = parser.parse_args()
-    prepare_html(args.description_path)
+    prepare_html()
 
     server = Server()
     server.watch('template.html', prepare_html)
