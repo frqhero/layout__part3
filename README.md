@@ -54,4 +54,4 @@ Here are the steps:
 2. Go http://127.0.0.1:5500/pages/index1.html 
 
 An example's deployed for you.  
-The complete product you are welcome to observe is at https://frqhero.github.io/layout__part3
+The complete product you are welcome to observe is at https://frqhero.github.io/layout__part3/pages/index1.html
