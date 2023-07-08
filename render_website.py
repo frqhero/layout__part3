@@ -13,7 +13,7 @@ def prepare_page(book_descriptions, counter, page_count):
     os.makedirs(folder, exist_ok=True)
     env = Environment(
         loader=FileSystemLoader('.'),
-        autoescape=select_autoescape(['html', 'xml'])
+        autoescape=select_autoescape(['html', 'xml']),
     )
     template = env.get_template('template.html')
 
@@ -23,17 +23,19 @@ def prepare_page(book_descriptions, counter, page_count):
         book['img_address'] = f'../media/images/{pic_name}'
 
     books_in_row = 2
-    books_description_row_chunked = list(chunked(book_descriptions, books_in_row))
+    books_description_row_chunked = list(
+        chunked(book_descriptions, books_in_row)
+    )
 
     rendered_page = template.render(
         books_description=books_description_row_chunked,
         page_count=page_count,
         page_number=counter,
         first_page=bool(counter == 1),
-        last_page=bool(counter == page_count)
+        last_page=bool(counter == page_count),
     )
 
-    with open(f'{folder}/index{counter}.html', 'w', encoding="utf8") as file:
+    with open(f'{folder}/index{counter}.html', 'w', encoding='utf8') as file:
         file.write(rendered_page)
 
 
@@ -44,8 +46,12 @@ def prepare_html(description_path):
     books_on_page = 10
     page_count = math.ceil(len(books_description_content) / books_on_page)
 
-    books_description_page_chunked = list(chunked(books_description_content, books_on_page))
-    for counter, book_descriptions in enumerate(books_description_page_chunked, 1):
+    books_description_page_chunked = list(
+        chunked(books_description_content, books_on_page)
+    )
+    for counter, book_descriptions in enumerate(
+        books_description_page_chunked, 1
+    ):
         prepare_page(book_descriptions, counter, page_count)
 
 
@@ -53,9 +59,7 @@ def is_file(filename):
     if os.path.isfile(filename):
         return filename
     else:
-        raise argparse.ArgumentTypeError(
-            f'{filename} is not a valid filename'
-        )
+        raise argparse.ArgumentTypeError(f'{filename} is not a valid filename')
 
 
 def create_parser():
