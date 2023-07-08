@@ -110,7 +110,7 @@ def main():
             parsed_book_page = parse_book_page(response.text)
             book_id = urlsplit(book_url).path.replace('/', '').replace('b', '')
 
-            books_folder = Path(args.dest_folder).joinpath('books')
+            books_folder = Path(args.dest_folder).joinpath('media/books')
             if not args.skip_txt:
                 download_txt(
                     book_url,
@@ -118,7 +118,7 @@ def main():
                     parsed_book_page['title'],
                     str(books_folder),
                 )
-            images_folder = Path(args.dest_folder).joinpath('shots')
+            images_folder = Path(args.dest_folder).joinpath('media/images')
             if not args.skip_imgs:
                 download_image(
                     book_url,
