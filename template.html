@@ -1,78 +1,78 @@
 <!doctype html>
 <html lang="ru">
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="../static/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-  <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
-  <title>Онлайн-библиотека</title>
-</head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="../static/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <link rel="shortcut icon" type="image/jpg" href="../static/favicon.ico"/>
+    <title>Онлайн-библиотека</title>
+  </head>
 
-<body>
-  <main>
-    <div class="container py-5">
-      <div class="container">
-        <nav aria-label="Page navigation example">
-          <ul class="pagination">
-            <li class="page-item {% if first_page %}disabled{% endif %}">
-              <a class="page-link" href="../pages/index{{ page_number - 1 }}.html">Назад</a>
-            </li>
-            {% for n in range(1, page_count + 1) %}
-              <li class="page-item {% if page_number == n %}active{% endif %}">
-                <a class="page-link" href="../pages/index{{ n }}.html">{{ n }}</a>
-              </li>
-            {% endfor %}
-            <li class="page-item {% if last_page %}disabled{% endif %}">
-              <a class="page-link" href="../pages/index{{ page_number + 1 }}.html">Вперед</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-      {% for book_chunk in books_description %}
+  <body>
+    <main>
+      <div class="container py-5">
         <div class="container">
-          <div class="row">
-            {% for book in book_chunk %}
-              <div class="col">
-                <div class="card mb-3" style="max-width: 540px;">
-                  <div class="row no-gutters">
-                    <div class="col-md-4">
-                      <img src="{{ book['img_address']| urlencode }}" class="card-img" alt="Обложка книги {{ book['title'] }}">
-                    </div>
-                    <div class="col-md-8">
-                      <div class="card-body">
-                        <h5 class="card-title">{{ book['title'] }}</h5>
-                        <p class="card-text">{{ book['author'] }}</p>
-                        <div class="mb-3">
-                          {% for genre in book['genres'] %}
-                            <span class="badge badge-secondary">{{ genre }}</span>
-                          {% endfor %}
+          <nav aria-label="Page navigation example">
+            <ul class="pagination">
+              <li class="page-item {% if first_page %}disabled{% endif %}">
+                <a class="page-link" href="../pages/index{{ page_number - 1 }}.html">Назад</a>
+              </li>
+              {% for n in range(1, page_count + 1) %}
+                <li class="page-item {% if page_number == n %}active{% endif %}">
+                  <a class="page-link" href="../pages/index{{ n }}.html">{{ n }}</a>
+                </li>
+              {% endfor %}
+              <li class="page-item {% if last_page %}disabled{% endif %}">
+                <a class="page-link" href="../pages/index{{ page_number + 1 }}.html">Вперед</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        {% for book_chunk in books_description %}
+          <div class="container">
+            <div class="row">
+              {% for book in book_chunk %}
+                <div class="col">
+                  <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                      <div class="col-md-4">
+                        <img src="{{ book['img_address']| urlencode }}" class="card-img" alt="Обложка книги {{ book['title'] }}">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="card-body">
+                          <h5 class="card-title">{{ book['title'] }}</h5>
+                          <p class="card-text">{{ book['author'] }}</p>
+                          <div class="mb-3">
+                            {% for genre in book['genres'] %}
+                              <span class="badge badge-secondary">{{ genre }}</span>
+                            {% endfor %}
+                          </div>
+                          <a href="{{ book['address']| urlencode }}" target="_blank">Читать</a>
                         </div>
-                        <a href="{{ book['address']| urlencode }}" target="_blank">Читать</a>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            {% endfor %}
+              {% endfor %}
+            </div>
           </div>
-        </div>
-      {% endfor %}
-    </div>
-  </main>
+        {% endfor %}
+      </div>
+    </main>
 
-  <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Optional JavaScript; choose one of the two! -->
 
-  <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-  <script src="../static/jquery-3.5.1.slim.min.js"
-    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
-  <script src="../static/bootstrap.bundle.min.js"
-    integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
-    crossorigin="anonymous"></script>
-</body>
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="../static/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"></script>
+    <script src="../static/bootstrap.bundle.min.js"
+      integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+      crossorigin="anonymous"></script>
+  </body>
 
 </html>
