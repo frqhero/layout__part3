@@ -18,6 +18,8 @@ def prepare_page(books_description, counter, page_count):
 
     for book in books_description:
         book['address'] = f'../books/{book["title"]}.txt'
+        pic_name = os.path.basename(book['img_address'])
+        book['img_address'] = f'../media/images/{pic_name}'
 
     books_description_by_2 = list(chunked(books_description, 2))
 
