@@ -50,8 +50,11 @@ Please consider using parameters to customize the script's behavior.
 ### Rendering a website
 There is a script named render_website.py in the repository. You can create a website out of downloaded sources from previous step with it.  
 Here are the steps:
-1. Run the script (by the way you can customise its behavior related to the description file it will get data to create web pages from, just add --description_path flag and specify its location or leave it blank so `books_description.json` will be entered for you), it creates pages at /pages/ and start serving them infinitely so they are available at http://127.0.0.1:5500  
+1. Run the script (by the way you can customise its behavior related to the description file it will get data to create web pages from, just add `--description_path` flag and specify its location or leave it blank so `books_description.json` will be entered for you), it creates pages at /pages/ and start serving them infinitely so they are available at http://127.0.0.1:5500  
 2. Go http://127.0.0.1:5500/pages/index1.html 
 
 An example's deployed for you.  
 The complete product you are welcome to observe is at https://frqhero.github.io/layout__part3/pages/index1.html
+
+### Offline usage
+It is worth noting that the project can be used offline in two ways. After the pages are created, you can either open the files directly from the 'pages' directory or, if the script is running and serving, access them at http://127.0.0.1:5500/pages/index1.html.
